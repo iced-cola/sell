@@ -10,7 +10,9 @@ import lombok.Getter;
 public enum ResultEnum {
 
     // command + shift + u 大写快捷键
-    PRODUCT_NOT_EXIST(10, "商品不存在");
+    PRODUCT_NOT_EXIST(10, "商品不存在"),
+
+    PRODUCT_NOT_ENOUGH(20, "商品库存不足");
 
 
     private Integer code;
