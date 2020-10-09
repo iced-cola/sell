@@ -12,7 +12,15 @@ public enum ResultEnum {
     // command + shift + u 大写快捷键
     PRODUCT_NOT_EXIST(10, "商品不存在"),
 
-    PRODUCT_NOT_ENOUGH(20, "商品库存不足");
+    PRODUCT_NOT_ENOUGH(20, "商品库存不足"),
+
+    ORDER_MASTER_NOT_EXIST(30, "订单不存在"),
+
+    ORDER_DETAIL_NOT_EXIST(40, "订单详情不存在"),
+
+    ORDER_STATUS_ERROR(50, "订单状态异常"),
+
+    ORDER_UPDATE_FAIL(60, "订单状态更新异常");
 
 
     private Integer code;

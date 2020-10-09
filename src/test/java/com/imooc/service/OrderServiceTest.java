@@ -2,20 +2,18 @@ package com.imooc.service;
 
 import com.imooc.dto.OrderDto;
 import com.imooc.po.OrderDetail;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.beans.PropertyEditorSupport;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author zhulongkun20@163.com
@@ -54,11 +52,16 @@ class OrderServiceTest {
     }
 
     @Test
-    void findOne() {
+    void findOneTest() {
+        String orderId = "1602064689031682534";
+        OrderDto orderDto = orderService.findOne(orderId);
+        logger.info("find result: {}", orderDto);
     }
 
     @Test
-    void findList() {
+    void findListTest() {
+        Page<OrderDto> list = orderService.findList("110110", PageRequest.of(0, 2));
+        Assert.assertNotNull(list);
     }
 
     @Test
