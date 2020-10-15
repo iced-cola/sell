@@ -29,6 +29,7 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author zhulongkun20@163.com
@@ -120,14 +121,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto cancel(OrderDto orderDto) {
         // 1. 判断订单状态
-        Optional<OrderMaster> orderMaster = orderMasterRepository.findById(orderDto.getOrderId());
-        if (!OrderStatusEnum.NEW.equals(orderMaster.get().getOrderStatus())) {
+        Optional<OrderMaster> orderMasterOpt = orderMasterRepository.findById(orderDto.getOrderId());
+        OrderMaster orderMaster = orderMasterOpt.get();
+        if (!OrderStatusEnum.NEW.getCode().equals(orderMaster.getOrderStatus())) {
             log.error("[取消订单] 订单状态不正确，OrderId={}. orderStatus={}", orderDto.getOrderId(), orderDto.getOrderStatus());
             throw new SellException(ResultEnum.ORDER_STATUS_ERROR);
         }
 
         // 2. 修正订单状态
-        orderDto.setOrderStatus(OrderStatusEnum.CANCEL.getCode());
+        orderMaster.setOrderStatus(OrderStatusEnum.CANCEL.getCode());
         OrderMaster result = orderMasterRepository.save(orderMaster);
         if (result == null) {
             log.error("[取消订单] 订单状态更新失败，orderId={}, orderStatus={}", orderDto.getOrderId(), orderDto.getOrderStatus());
@@ -135,20 +137,51 @@ public class OrderServiceImpl implements OrderService {
         }
 
         // 3. 返还库存
+        List<CartDto> cartDtoList = orderDto.getOrderDetailList().stream()
+                .map(e -> new CartDto(e.getProductId(), e.getProductQuantity()))
+                .collect(Collectors.toList());
+        productService.increaseStock(cartDtoList);
 
-
-        // 4. 退款（如果已支付）
+        // 4. 退款（如果已支付成功）
+        if (PayStatusEnum.SUCCESS.getCode().equals(orderDto.getPayStatus())) {
+            OrderMaster orderMaster1 = new OrderMaster();
+            BeanUtils.copyProperties(orderDto, orderMaster1);
+            orderMaster1.setPayStatus(PayStatusEnum.REFUND.getCode());
+            OrderMaster result1 = orderMasterRepository.save(orderMaster1);
+            if (result1 == null) {
+                log.error("[取消订单] 订单退款失败，orderId={}, orderAmount={}", orderDto.getOrderId(), orderDto.getOrderAmount());
+            }
+            // TODO 退款操作
+        }
 
         return null;
     }
 
     @Override
     public OrderDto finish(OrderDto orderDto) {
+        OrderMaster orderMaster = orderMasterRepository.getOne(orderDto.getOrderId());
+        orderMaster.setOrderStatus(OrderStatusEnum.FINISH.getCode());
+        orderMasterRepository.save(orderMaster);
         return null;
     }
 
     @Override
     public OrderDto pay(OrderDto orderDto) {
+        // 1. 判断订单状态（新订单）
+        if (!OrderStatusEnum.NEW.getCode().equals(orderDto.getOrderStatus())) {
+            log.error("[订单支付] 订单状态不正确，orderId={}, orderStatus={}", orderDto.getOrderId(), orderDto.getOrderStatus());
+        }
+
+        // 2. 判断支付状态
+        if (!PayStatusEnum.WAIT.getCode().equals(orderDto.getPayStatus())) {
+            log.error("[订单支付] 订单状态不正确，orderId={}, orderStatus={}", orderDto.getOrderId(), orderDto.getPayStatus());
+        }
+
+        // 3. 修改支付状态
+        OrderMaster orderMaster = new OrderMaster();
+        orderMaster.setPayStatus(PayStatusEnum.SUCCESS.getCode());
+        orderMasterRepository.save(orderMaster);
+
         return null;
     }
 }

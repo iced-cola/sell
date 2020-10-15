@@ -1,5 +1,7 @@
 package com.imooc.service;
 
+import com.imooc.constant.OrderStatusEnum;
+import com.imooc.constant.PayStatusEnum;
 import com.imooc.dto.OrderDto;
 import com.imooc.po.OrderDetail;
 import org.junit.Assert;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 /**
@@ -65,14 +68,35 @@ class OrderServiceTest {
     }
 
     @Test
-    void cancel() {
+    void cancelTest() {
+        OrderDto orderDto = new OrderDto();
+        orderDto.setOrderId("1602064689031682534");
+        orderDto.setOrderStatus(OrderStatusEnum.NEW.getCode());
+        orderDto.setPayStatus(PayStatusEnum.SUCCESS.getCode());
+        OrderDetail orderDetail = new OrderDetail();
+        orderDetail.setDetailId("1602064689223113312");
+        orderDetail.setProductId("100002");
+        orderDetail.setProductQuantity(1);
+        OrderDetail orderDetail1 = new OrderDetail();
+        orderDetail1.setDetailId("1602064689324975606");
+        orderDetail1.setProductId("100003");
+        orderDetail1.setProductQuantity(3);
+        orderDto.setOrderDetailList(new ArrayList<>() {{
+            add(orderDetail);
+            add(orderDetail1);
+        }});
+        OrderDto result = orderService.cancel(orderDto);
+        Assert.assertNotNull(result);
     }
 
     @Test
-    void finish() {
+    void finishTest() {
+        OrderDto orderDto = new OrderDto();
+        orderDto.setOrderId("100100");
+        orderService.finish(orderDto);
     }
 
     @Test
-    void pay() {
+    void payTest() {
     }
 }
