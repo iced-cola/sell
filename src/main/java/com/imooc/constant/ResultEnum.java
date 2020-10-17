@@ -9,6 +9,8 @@ import lombok.Getter;
 @Getter
 public enum ResultEnum {
 
+    PARAM_ERROR(1, "参数不正确"),
+
     // command + shift + u 大写快捷键
     PRODUCT_NOT_EXIST(10, "商品不存在"),
 
@@ -20,7 +22,9 @@ public enum ResultEnum {
 
     ORDER_STATUS_ERROR(50, "订单状态异常"),
 
-    ORDER_UPDATE_FAIL(60, "订单状态更新异常");
+    ORDER_UPDATE_FAIL(60, "订单状态更新异常"),
+
+    CART_EMPTY(70, "购物车为空");
 
 
     private Integer code;
