@@ -1,7 +1,6 @@
 package com.imooc.service;
 
 import com.imooc.dto.OrderDto;
-import com.imooc.po.OrderMaster;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -40,4 +39,11 @@ public interface OrderService {
      * 支付订单
      */
     OrderDto pay(OrderDto orderDto);
+
+    /**
+     * 卖家查询所有的订单
+     * @param pageable 分页
+     * @return 符合条件的订单列表
+     */
+    Page<OrderDto> findList(Pageable pageable);
 }

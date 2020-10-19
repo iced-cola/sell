@@ -24,7 +24,11 @@ public enum ResultEnum {
 
     ORDER_UPDATE_FAIL(60, "订单状态更新异常"),
 
-    CART_EMPTY(70, "购物车为空");
+    CART_EMPTY(70, "购物车为空"),
+
+    ORDER_OWNER_ERROR(80, "订单不属于当前用户"),
+
+    ORDER_NOT_EXIST(90, "订单不存在");
 
 
     private Integer code;

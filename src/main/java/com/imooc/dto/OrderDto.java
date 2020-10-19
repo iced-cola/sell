@@ -1,9 +1,13 @@
 package com.imooc.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.imooc.constant.OrderStatusEnum;
+import com.imooc.constant.PayStatusEnum;
 import com.imooc.po.OrderDetail;
 import com.imooc.serializer.Date2LongSerializer;
+import com.imooc.util.CodeEnumUtil;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -63,4 +67,15 @@ public class OrderDto {
 
     @JsonSerialize(using = Date2LongSerializer.class)
     private Date updateTime;
+
+    // 加上注解之后返回json时会自动忽略
+    @JsonIgnore
+    public OrderStatusEnum getOrderStatusEnum() {
+        return CodeEnumUtil.getByCode(orderStatus, OrderStatusEnum.class);
+    }
+
+    @JsonIgnore
+    public PayStatusEnum getPayStatusEnum() {
+        return CodeEnumUtil.getByCode(payStatus, PayStatusEnum.class);
+    }
 }
