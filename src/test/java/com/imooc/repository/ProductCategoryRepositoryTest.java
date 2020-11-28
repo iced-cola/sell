@@ -12,6 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -47,5 +48,11 @@ public class ProductCategoryRepositoryTest {
     @Test
     public void updateTest() {
 
+    }
+
+    @Test
+    public void findAllTest() {
+        List<ProductCategory> categoryList = productCategoryRepository.findAll();
+        logger.info("find all result: {}", categoryList);
     }
 }

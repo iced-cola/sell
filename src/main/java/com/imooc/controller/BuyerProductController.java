@@ -33,8 +33,9 @@ public class BuyerProductController {
     @Autowired
     private CategoryService categoryService;
 
+    @SuppressWarnings("unchecked")
     @GetMapping("/list")
-    public ResultVO list() {
+    public ResultVO<ProductInfo> list() {
 
         // 1.查所有的上架商品
         List<ProductInfo> productInfoList = productService.findUpAll();

@@ -16,5 +16,7 @@ public interface CategoryService {
 
     List<ProductCategory> findByCategoryTypeIn(List<Integer> categoryTypeList);
 
+    List<String> findAllCategoryName();
+
 }
 
